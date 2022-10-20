@@ -1,0 +1,15 @@
+.idea/
+.vscode/
+node_modules/
+build/
+src/
+scripts/
+tmp/
+temp/
+attachments/
+public/*
+!public/.gitkeep
+mail.db
+client.ts
+client.py
+client_attachment.py
