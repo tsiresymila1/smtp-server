@@ -21,7 +21,7 @@
      "jsx": "preserve",
      "typeRoots" : ["node_modules/@types", "client/types"],
    },
-   "include": ["src/*", "client/"]
+   "include": ["src/*"]
 
  }
  

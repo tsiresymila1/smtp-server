@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+import  yargs from 'yargs/yargs'
+import  {hideBin } from 'yargs/helpers'
 import { AddressInfo } from "net";
 import { AppDataSource } from "./data-source";
 import { CustomSMTPServer } from "./server";
@@ -11,6 +14,8 @@ import { apiRouter } from "./api";
 import { renderer } from "./render";
 import bodyParser  from 'body-parser'
 import { resolveDistPath } from "./utils/resolve-path";
+import os from 'node:os'
+
 
 async function createAppServer(){
     const app: Express = express();
@@ -32,7 +37,16 @@ async function createAppServer(){
     return httpServer
 }
 
+const argv = yargs(hideBin(process.argv)).argv
+let httpPort: number = 8000
+let smtpPort:number = 1025
 
+if(argv['http']){
+    httpPort = parseInt(argv['http'])
+}
+if(argv['smtp']){
+    smtpPort = parseInt(argv['smtp'])
+}
 AppDataSource.initialize()
   .then(async () => {
     const httpServer = await createAppServer()
@@ -43,27 +57,23 @@ AppDataSource.initialize()
     const smtp = new CustomSMTPServer(
       AppDataSource.manager,
       {
-        banner: "Welcome to My Awesome SMTP Server",
-        name: "MAIL TEST",
         size: 10 * 1024 * 1024 * 1024,
-        logger: false,
-        secure: false,
-        useXClient: true,
-        useXForward: true,
-        hidePIPELINING: true,
-        disabledCommands: [ "STARTTLS"],
+        authOptional: true,
+        authMethods: ['PLAIN', 'LOGIN', 'XOAUTH2'],
+        secure: true,
+        secured: true
       },
       (email) => {
         io.emit("new-email", {email: email, source:email.from.address, target: [...email.to.map((e)=>e.address)]});
       }
     );
-    smtp.listen(1027, "localhost", () => {
+    smtp.listen(smtpPort, "localhost", () => {
       const address = smtp.server.address() as AddressInfo;
       console.log(
         `SMTP SERVER Listening on [${address.address}]:${address.port}`
       );
-      httpServer.listen(8000, () => {
-        console.log(`Express server listening on port 8000`);
+      httpServer.listen(httpPort, () => {
+        console.log(`Express server listening on port ${httpPort}`);
       });
     });
   })

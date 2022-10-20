@@ -27,7 +27,7 @@ def send_mail(send_from, send_to, subject, text, files=None,
         # After the file is closed
         part['Content-Disposition'] = 'attachment; filename="%s"' % basename(f)
         msg.attach(part)
-    smtp = smtplib.SMTP(server,1027)
+    smtp = smtplib.SMTP(server,1025)
     smtp.set_debuglevel(0)
     smtp.login(send_from, 'password') 
     smtp.sendmail(send_from, send_to, msg.as_string())

@@ -9,7 +9,7 @@ def send_mail(to_email, subject, message, server='localhost',
     msg['To'] = ', '.join(to_email)
     msg.set_content(message)
     print(msg)
-    server = smtplib.SMTP(server,1027)
+    server = smtplib.SMTP(server,1025)
     server.set_debuglevel(1)
     server.login(from_email, 'password')  # user & password
     server.send_message(msg)

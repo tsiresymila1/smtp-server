@@ -3,6 +3,8 @@ import { DataSource } from "typeorm"
 import { Attachment } from "./entity/Attachment"
 import { Email } from "./entity/Email"
 import { User } from "./entity/User"
+import os from 'node:os'
+import { join } from "node:path"
 
 export const AppDataSource = new DataSource({
     synchronize: true,
@@ -11,5 +13,5 @@ export const AppDataSource = new DataSource({
     migrations: [],
     subscribers: [],
     type: "sqlite",
-    database: "mail.db",
+    database: join(os.homedir(),"mail.db"),
 })
