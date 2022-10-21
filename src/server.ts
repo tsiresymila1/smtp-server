@@ -178,7 +178,6 @@ export class CustomSMTPServer extends SMTPServer {
       stream.end();
     });
   }
-
   onConnect(session, callback) {
     callback(null);
   }

@@ -117,7 +117,7 @@ export const Login = () => {
                     </Alert>
                   </Form.Group>
                 )}
-                <Form.Group className="mt-4">
+                <Form.Group className="mt-4 mb-5">
                   <div className="d-grid gap-2">
                     <Button
                       disabled={messageEmail !== null}

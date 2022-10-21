@@ -4,7 +4,7 @@ export type User = {
     name: string
     to: Email[]
     from: Email[]
-    created_at: Date
+    created_at?: Date
 }
 
 export type Email = {

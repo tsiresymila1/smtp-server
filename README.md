@@ -1,7 +1,29 @@
-# Awesome Project Build with TypeORM
+# MAILBOXDEV SMTP SERVER
 
-Steps to run this project:
+## Get Started.
 
-1. Run `npm i` command
-2. Setup database settings inside `data-source.ts` file
-3. Run `npm start` command
+1. Install globally mailboxdev
+
+```bash
+$ npm install -g mailboxdev
+```
+
+
+
+2. Start mailboxdev server 
+
+```bash
+$ mailboxdev --http=$http_port(defaut=8000) --smtp=$smtp_por(default=1025) --admin=$admin_email(default='admin@mail.com') 
+```
+Specify http , smtp, admin email address by specifying --http, --smtp, --admin values.
+
+
+
+### Tsiresy Milà
+** tsiresymila@gmail.com **
+
+3.Open browser to get dashboard
+
+```bash
+http://localhost:$http_port
+```

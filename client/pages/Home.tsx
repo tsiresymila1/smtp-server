@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { io } from "socket.io-client";
 import { Sidenav } from "../components/Sidenav";
 import { NavBar } from "../components/NavBar";
@@ -8,15 +8,16 @@ import "../css/responsive.css";
 import { BackDrop } from "../components/BackDrop";
 import Favicon from "react-favicon";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
-import { addEmailReceivedItem, addEmailSentItem } from "../slice/emailSlice";
 import { Email } from "../@types/data";
+import { emailApi, useGetEmailReceivedQuery } from "../app/services/emailApi";
 
 export const Home = () => {
+  const location = useLocation();
   const [showBackDrop, setShowBackDrop] = React.useState<boolean>(false);
   const ref = React.createRef<HTMLDivElement>();
   const [alertCount, setAlertCount] = React.useState(undefined);
-  const emails = useAppSelector((state) => state.email);
   const auth = useAppSelector((state) => state.auth);
+  const emailReceivedApi = useGetEmailReceivedQuery();
   const dispatch = useAppDispatch();
 
   const toggle = () => {
@@ -34,16 +35,15 @@ export const Home = () => {
   };
 
   React.useEffect(() => {
-    const noRead = emails?.received?.filter(
+    const noRead = emailReceivedApi.data?.filter(
       (m) => !m.read?.map((u) => u.address).includes(auth.user?.address)
     ).length;
-    console.log("Count : ", noRead);
     if (noRead > 0) {
       setAlertCount(noRead);
     } else {
       setAlertCount(null);
     }
-  }, [emails]);
+  }, [emailReceivedApi, location]);
 
   React.useEffect(() => {
     function updateSize() {
@@ -70,20 +70,37 @@ export const Home = () => {
     socket.on("connect_error", () => {
       socket.io.opts.transports = ["polling", "websocket"];
     });
-    socket.on("new-email", (data) => {
+    socket.on("new-email", (data,admin) => {
       if (auth.user !== null) {
         const email = data.email as Email;
         const target = data.target as string[];
         const source = data.source as string;
         const myadresss = auth.user?.address;
-        if (target.includes(myadresss)) {
-          dispatch(addEmailReceivedItem(email));
+        if (target.includes(myadresss) || auth.user?.address === admin) {
+          console.log('Update')
+          dispatch(
+            emailApi.util.updateQueryData("getEmailReceived", undefined, (draft) => {
+              console.log('Socket draft getEmailReceived')
+              draft.unshift(email);
+              return draft;
+            })
+          );
         }
         if (source === myadresss) {
-          dispatch(addEmailSentItem(email));
+          dispatch(
+            emailApi.util.updateQueryData("getEmailSent", undefined, (draft) => {
+              console.log('Socket draft getEmailSent')
+              draft.unshift(email);
+              return draft;
+            })
+          );
         }
       }
     });
+    return () => {
+      socket.off("connect_error");
+      socket.off("new-email");
+    };
   }, []);
 
   return (

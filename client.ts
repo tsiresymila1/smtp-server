@@ -10,7 +10,7 @@ async function main() {
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({ 
     host: "localhost",
-    port: 1027,
+    port: 1025,
     secure: false, // true for 465, false for other ports
     auth: {
       user: testAccount.user, // generated ethereal user
