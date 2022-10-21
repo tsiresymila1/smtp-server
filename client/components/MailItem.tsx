@@ -4,11 +4,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { FaArchive } from "react-icons/fa";
 import { useAppSelector } from "../hooks/redux";
 import { useDeleteEmailMutation } from "../app/services/emailApi";
-import LinesEllipsis from "react-lines-ellipsis";
 
 export const MailItem = ({ email, url }: { email: Email; url: string }) => {
   const [showAction, setShowAction] = React.useState<boolean>(false);
   const [deleteEmail] = useDeleteEmailMutation();
+  const [text, setText] = React.useState<string>('')
   const navigate = useNavigate();
   const auth = useAppSelector((state) => state.auth);
   const location = useLocation();
@@ -23,6 +23,17 @@ export const MailItem = ({ email, url }: { email: Email; url: string }) => {
       state: email,
     });
   };
+
+  React.useEffect(()=>{
+    const div = document.createElement("div")
+    div.innerHTML = email.subject+'-'+email.text
+    const text = div.textContent || div.innerText || "";
+    if(text.length > 180){ 
+      setText(text.substring(0,160)+'...')
+    }else{
+      setText(text)
+    }
+  },[])
 
   return (
     <tr
@@ -55,14 +66,7 @@ export const MailItem = ({ email, url }: { email: Email; url: string }) => {
             : { textOverflow: "ellipsis", fontWeight: "bold" }
         }
       >
-        {email.subject?.replace(/(<([^>]+)>)/gi, "")} -{" "}
-        <LinesEllipsis
-          text={email.text?.replace(/(<([^>]+)>)/gi, "").toString()}
-          maxLine="1"
-          ellipsis="..."
-          trimRight
-          basedOn="letters"
-        />
+      {text}  
       </td>
       <td
         style={{

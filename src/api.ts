@@ -268,7 +268,7 @@ apiRouter.get("/download/:id", async (req, res) => {
       "public",
       `${attach.timestamp}__${attach.name}`
     );
-    res.setHeader("Content-Disposition", "attachment; filename=" + attach.name);
+    res.setHeader("Content-Disposition", `attachment; filename="${attach.name}"`);
     res.sendFile(filepath);
   } else {
     res.json({ success: null, error: "Attachment not found" });

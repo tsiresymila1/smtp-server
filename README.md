@@ -11,7 +11,7 @@ $ npm install -g mailboxdev
 2. Start mailboxdev server 
 
 ```bash
-$ mailboxdev --http=$http_port(defaut=8000) --smtp=$smtp_por(default=1025) --admin=$admin_email(default='admin@mail.com') 
+$ mailboxdev --http=$http_port(default=8000) --smtp=$smtp_por(default=1025) --admin=$admin_email(default='admin@mail.com') 
 ```
 Specify http , smtp, admin email address by specifying --http, --smtp, --admin values.
 

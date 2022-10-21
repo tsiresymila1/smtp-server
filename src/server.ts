@@ -144,7 +144,14 @@ export class CustomSMTPServer extends SMTPServer {
       const attachments: Attachment[] = [];
       for (const attach of parsed.attachments) {
         const timestamp = moment().unix();
-        const filename = attach.filename.trim().replace(/\s+/g, '');
+        const arname = attach.filename.split('.')
+        const ext =  arname.slice(-1)[0]
+        arname.pop();
+        const filename = 
+        arname.join('').trim()
+          .split(" ")
+          .join("")
+          .replaceAll(/[^\w\s]/gi, "-")+`.${ext}`;
         const filepath = join(
           resolve(__dirname, ".."),
           "public",
