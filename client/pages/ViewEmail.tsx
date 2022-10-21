@@ -64,7 +64,6 @@ export const ViewEmail = () => {
         </Col>
       </Row>
       <Row style={{ margin: 20, fontSize: 14 }}>
-        <div dangerouslySetInnerHTML={{ __html: email.text }}></div>
         <div dangerouslySetInnerHTML={{ __html: email.html }}></div>
       </Row>
       <Row className="ps-8">
